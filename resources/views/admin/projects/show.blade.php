@@ -3,11 +3,26 @@
 @section('content')
    <div class="container mt-5">
         <div class="row d-flex justify-content-center">
+
          <div class="card col-12" style="width: 36rem;">
+
             <img src="{{ asset('storage/' . $project->image) }}" class="card-img-top img-fluid pt-2 rounded" alt="...">
+
             <div class="card-body">
               <h5 class="card-title">{{ $project->title }}</h5>
               <p>Created: <small>{{ $project->created }}</small></p>
+
+               <div>
+                  <p>
+                     Tech used:
+                     @forelse ($project->technologies as $technology)
+                     <span class="px-2 badge bg-secondary"> {{ $technology->name }}</span>
+                     @empty
+                        <span>Unknown</span>
+                     @endforelse
+                  </p>
+               </div>
+
               <p>Type: <small>{{ $project->type->name }}</small></p>
               <p class="card-text">{{ $project->description }}</p>
 
@@ -29,6 +44,7 @@
               </div>
             </div>
           </div>
+          
          </div>
    </div>
 
