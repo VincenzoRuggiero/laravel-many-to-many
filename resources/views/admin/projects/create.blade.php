@@ -8,7 +8,7 @@
           </div>
         </div>
         <div class="row">
-            <div class="col-5">
+            <div class="col-8">
               @include('admin.projects.partials.form', ['method' => 'POST', 'routeName' => 'admin.projects.store'])
             </div>
         </div>

@@ -53,6 +53,17 @@
         @enderror    
     </div>
 
+      {{-- Technology selector --}}
+    <div class="mb-3 d-flex align-items-center justify-content-between">
+        @foreach ($technologies as $technology)
+                <div class="d-flex align-items-center">
+                    <input type="checkbox" class="form-check-input" name="technologies[]" value="{{ $technology->id }}">
+
+                    <label class="form-check-label ms-2">{{ $technology->name }}</label>
+                </div>
+        @endforeach
+    </div>
+
     {{-- File upload --}}
     <div class="mb-3">
         <label for="image" class="form-label">Project Image</label>
