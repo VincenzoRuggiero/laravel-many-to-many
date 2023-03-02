@@ -28,7 +28,7 @@ class ProjectSeeder extends Seeder
             $newProject->link = $faker->unique()->url();
             $newProject->created = $faker->dateTimeThisYear();
             $newProject->slug = Str::slug($newProject->title);
-            $newProject->image = 'placeholder.jpg';
+            $newProject->image = 'google.jpg';
             $newProject->save();
         }
     }
