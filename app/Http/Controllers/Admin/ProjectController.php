@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Type;
 use App\Models\Project;
+use App\Models\Technology;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -36,7 +37,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('admin.projects.create', ["project" => new Project(), "types" => Type::all()]);
+        return view('admin.projects.create', ["project" => new Project(), "types" => Type::all(), 'technologies' => Technology::all()]);
     }
 
     /**
@@ -54,7 +55,8 @@ class ProjectController extends Controller
             'link' => 'required|url|max:400|unique:projects',
             'created' => 'required|date',
             'image' => 'required|image|max:2048',
-            'type_id' => 'exists:types,id'
+            'type_id' => 'exists:types,id',
+            'technologies' => 'array|exists:technologies,id'
         ], 
         [
             'title.required' => 'Il titolo non può essere lasciato vuoto',
@@ -75,6 +77,7 @@ class ProjectController extends Controller
         $newProject = new Project();
         $newProject->fill($formData);
         $newProject->save();
+        $newProject->technologies()->sync($formData['technologies']);
 
         return redirect()->route('admin.projects.index');
     }
@@ -102,7 +105,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', ["project" => $project, "types" => Type::all()]);
+        return view('admin.projects.edit', ["project" => $project, "types" => Type::all(), 'technologies' => Technology::all()]);
     }
 
     /**
@@ -120,7 +123,8 @@ class ProjectController extends Controller
             'link' => ['required', 'max:400', 'url', Rule::unique('projects')->ignore($project->id)],
             'created' => 'required|date',
             'image' => 'required|image|max:2048',
-            'type_id' => 'exists:types,id'
+            'type_id' => 'exists:types,id',
+            'technologies' => 'array|exists:technologies,id'
         ],
         [
             'title.required' => 'Il titolo non può essere lasciato vuoto',
@@ -134,8 +138,9 @@ class ProjectController extends Controller
             'image.required' => 'File immagine mancante',
             'image.max' => 'Il file supera i 2mb di dimensione massima',
         ]);
-
+        $formData['image'] = Storage::put('imgs/', $formData['image']);
         $project->update($formData);
+        $project->technologies()->sync($formData['technologies']);
 
         return redirect()->route('admin.projects.show', compact('project'));
 
@@ -149,6 +154,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {   
+        $project->technologies()->sync([]);
         $project->delete();
 
         return redirect()->route('admin.projects.index');
